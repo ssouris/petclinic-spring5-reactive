@@ -1,0 +1,13 @@
+build/
+.idea/
+*.iml
+*.ipr
+*.iws
+*.log
+.gradle/
+classes/
+out/
+node/
+node_modules/
+src/main/resources/static/css/
+src/main/resources/static/images/
