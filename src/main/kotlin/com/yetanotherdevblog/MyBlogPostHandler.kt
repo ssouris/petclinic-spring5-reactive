@@ -1,36 +1,43 @@
 package com.yetanotherdevblog
 
+import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.body
+import org.springframework.stereotype.Component
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.server.ServerRequest
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import java.time.Duration
 
-@org.springframework.stereotype.Component
-class MyBlogPostHandler(val myBlogPostRepo: com.yetanotherdevblog.MyBlogPostRepo) {
+@Component
+class MyBlogPostHandler(val myBlogPostRepo: MyBlogPostRepo) {
 
-    fun getBlogPost( serverRequest: org.springframework.web.reactive.function.server.ServerRequest): reactor.core.publisher.Mono<ServerResponse> {
-        val id = serverRequest.queryParam("id") ?: return reactor.core.publisher.Mono.empty()
+    fun getBlogPost( serverRequest: ServerRequest): Mono<ServerResponse> {
+        val id = serverRequest.queryParam("id") ?: return Mono.empty()
         return ok().json()
-                .body(myBlogPostRepo.findById(id.get()), com.yetanotherdevblog.MyBlogPost::class.java)
+                .body(myBlogPostRepo.findById(id.get()), MyBlogPost::class.java)
     }
 
-    fun getBlogPosts( serverRequest: org.springframework.web.reactive.function.server.ServerRequest) =
-            ok().json().body(myBlogPostRepo.findAll(), com.yetanotherdevblog.MyBlogPost::class.java)
+    fun getBlogPosts( serverRequest: ServerRequest) =
+            ok().json().body(myBlogPostRepo.findAll(), MyBlogPost::class.java)
 
-    fun save(serverRequest: org.springframework.web.reactive.function.server.ServerRequest) =
+    fun save(serverRequest: ServerRequest) =
             ok().json().body(
-                    serverRequest.bodyToMono(com.yetanotherdevblog.MyBlogPost::class.java)
+                    serverRequest.bodyToMono(MyBlogPost::class.java)
                                 .map { e -> myBlogPostRepo.save(e) }
                                 .doOnSuccess( { println("Save success") }))
 
-    fun matchClock(serverRequest: org.springframework.web.reactive.function.server.ServerRequest) =
+    fun matchClock(serverRequest: ServerRequest) =
             ok().textEventStream()
-            .body(reactor.core.publisher.Flux.interval(java.time.Duration.ofMillis(200)).map { "Second $it" }, String::class.java)
+            .body(Flux.interval(Duration.ofMillis(200)).map { "Second $it" }, String::class.java)
 
     fun experimentingWithWebClient() {
-        val client = org.springframework.web.reactive.function.client.WebClient.create("http://localhost:8081")
+        val client = WebClient.create("http://localhost:8081")
                 .get()
                 .uri("/")
-                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(String::class.java)
     }
