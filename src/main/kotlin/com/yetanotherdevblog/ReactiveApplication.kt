@@ -1,5 +1,6 @@
 package com.yetanotherdevblog
 
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
@@ -7,5 +8,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class ReactiveApplication
 
 fun main(args: Array<String>) {
-    run(ReactiveApplication::class, *args)
+    SpringApplication.run(ReactiveApplication::class.java, *args)
 }

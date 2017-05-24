@@ -41,11 +41,6 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
     }
 }
-//
-//node {
-//    version = "6.9.4"
-//    download = true
-//}
 
 noArg {
     annotation("org.springframework.data.mongodb.core.mapping.Document")
@@ -72,22 +67,3 @@ dependencies {
     compile("com.fasterxml.jackson.module:jackson-module-kotlin")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 }
-
-//task<GulpTask>("gulpBuild") {
-//    dependsOn(YarnInstallTask.NAME)
-//    inputs.dir("src/main/sass")
-//    inputs.dir("src/main/ts")
-//    inputs.dir("src/main/images")
-//    outputs.dir("build/resources/main/static")
-//    args = listOf("build")
-//}
-//
-//task<GulpTask>("gulpClean") {
-//    dependsOn(YarnInstallTask.NAME)
-//    inputs.dir("build/.tmp")
-//    outputs.dir("build/resources/main/static")
-//    args = listOf("clean")
-//}
-//
-//tasks.getByName("processResources").dependsOn("gulpBuild")
-//tasks.getByName("clean").dependsOn("gulpClean")

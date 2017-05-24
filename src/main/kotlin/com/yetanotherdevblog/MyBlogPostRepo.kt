@@ -11,4 +11,6 @@ class MyBlogPostRepo(val template: ReactiveMongoTemplate) {
 
     fun findAll() = template.findAll<MyBlogPost>()
 
+    fun save(blogPost : MyBlogPost) = template.save(blogPost)
+
 }
