@@ -1,0 +1,40 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Veterinarians')"></head>
+<body>
+
+<div th:include="fragments/bodyHeader (tab='vets')" th:remove="tag"></div>
+
+<div class="container">
+    <div class="ui grid">
+        <div class="nine wide column">
+            <h1 class="ui header">Veterinarians</h1>
+        </div>
+        <div class="seven wide column">
+            <a href="add" class="ui button green" style="float: right; margin-left: 1em;">Add Veterinarian</a>
+        </div>
+    </div>
+
+    <table class="ui table segment" th:if="${not vets.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Specialities</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vet: ${vets}">
+            <td> <a th:text="${vet.firstName} + ' ' + ${vet.lastName}" th:href="@{edit(id=${vet.id})}"></a></td>
+            <td>
+                <div th:if="${not vet.specialities.isEmpty()}">
+                    <span class="ui small teal label" th:each="speciality: ${vet.specialities}" th:text="${speciality}"/>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

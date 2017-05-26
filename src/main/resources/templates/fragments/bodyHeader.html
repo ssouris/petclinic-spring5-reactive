@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head></head>
+<body th:fragment="bodyHeader (tab)" id="example">
+
+<div class="ui menu teal inverted">
+    <a class="title item" href="/"><strong>Pet Clinic</strong></a>
+    <a th:class="${tab == 'owners' }? 'active item' : 'item'" href="/owners/">Find Owners</a>
+    <a th:class="${tab == 'vets' }? 'active item' : 'item'" href="/vets/">Veterinarians</a>
+    <a th:class="${tab == 'specialities' }? 'active item' : 'item'" href="/specialities/">Specialities</a>
+    <a th:class="${tab == 'petTypes' }? 'active item' : 'item'" href="/petTypes/">Pet Types</a>
+    <!--<a th:class="${tab == 'vets' }? 'active item' : 'item'" href="#">Veterinarians</a>-->
+    <!--<a class="right floated item">Sign in</a>-->
+</div>
+
+</body>
+</html>

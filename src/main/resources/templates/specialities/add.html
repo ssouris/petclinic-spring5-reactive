@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Add Speciality')"></head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            name : {
+                identifier : 'name',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter name'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='add speciality')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Add Speciality</h1>
+
+    <form method="post" action="add" role="form" class="ui form">
+        <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Name"/>
+        </div>
+        <button type="submit" class="ui blue submit button">Save</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

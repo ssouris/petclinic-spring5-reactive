@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Owners')"></head>
+<body>
+
+<div th:include="fragments/bodyHeader (tab='owners')" th:remove="tag"></div>
+
+<div class="container">
+    <div class="ui grid">
+        <div class="seven wide column">
+            <h1 class="ui header">Owners</h1>
+        </div>
+        <div class="nine wide column">
+            <div class="ui icon input" style="float: right; margin-left: 1em;">
+                <form action="" method="get">
+                    <input name="q" type="text" placeholder="Find owners..." th:value="${searchQuery}"/>
+                </form>
+                <i class="circular search icon"></i>
+            </div>
+            <a href="add" class="ui button green" style="float: right; margin-left: 1em;">Add Owner</a>
+        </div>
+    </div>
+
+    <table class="ui table segment" th:if="${not owners.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Address</th>
+            <th>Telephone</th>
+            <th>Pets</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="owner: ${owners}">
+            <td><a th:href="@{/owners/view(id=${owner.first.id})}"
+                   th:text="${owner.first.firstName} + ' ' + ${owner.first.lastName}"></a></td>
+            <td th:text="${owner.first.city}"></td>
+            <td th:text="${owner.first.address}"></td>
+            <td th:text="${owner.first.telephone}"></td>
+            <td>
+                <div th:if="${not owner.second.isEmpty()}">
+                    <span class="ui small label teal" th:each="pet: ${owner.second}" th:text="${pet.name}"/>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

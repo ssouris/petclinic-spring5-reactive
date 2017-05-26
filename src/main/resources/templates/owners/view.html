@@ -1,0 +1,77 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Owner')"></head>
+<body>
+
+<div th:include="fragments/bodyHeader (tab='view owner')" th:remove="tag"></div>
+
+<div class="container">
+    <div class="ui grid">
+        <div class="twelve wide column">
+            <h1 class="ui header">Owner</h1>
+        </div>
+        <div class="four wide column">
+            <a th:href="@{/owners/edit(id=${owner.id})}" class="small ui right floated button blue">Edit Owner</a>
+        </div>
+    </div>
+
+    <table class="ui table segment">
+        <tr>
+            <th>Name</th>
+            <td><i class="user icon"></i> <span th:text="${owner.firstName + ' ' + owner.lastName}"></span></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td><i class="map marker icon"></i> <span th:text="${owner.city + ', ' + owner.address}"></span></td>
+        </tr>
+        <tr>
+            <th>Telephone</th>
+            <td><i class="phone icon"></i> <span th:text="${owner.telephone}"></span></td>
+        </tr>
+    </table>
+
+    <div class="ui grid">
+        <div class="twelve wide column">
+            <h2 class="ui header">Pets and Visits</h2>
+        </div>
+        <div class="four wide column">
+            <a th:href="@{/pets/add(ownerId=${owner.id})}" class="small ui right floated button green">Add Pet</a>
+        </div>
+    </div>
+
+    <table class="ui table segment" th:if="${not pets.isEmpty()}">
+        <thead>
+        <tr>
+            <th style="width: 25%">Name</th>
+            <th style="width: 25%">Type</th>
+            <th style="width: 25%">Visit Date</th>
+            <th style="width: 25%">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pet: ${pets}">
+            <td style="vertical-align: top"><a th:href="@{/pets/edit(id=${pet.id})}" th:text="${pet.name}"></a></td>
+            <td style="vertical-align: top" th:text="${petTypes.get(pet).name}"></td>
+            <td colspan="2" style="padding: 0">
+                <table class="ui table small " style="width: 100%">
+                    <tr th:each="visit: ${petVisits.get(pet)}">
+                        <td style="width: 50%">
+                            <a th:text="${visit.visitDate}" th:href="@{/visits/edit(id=${visit.id})}"></a>
+                        </td>
+                        <td th:text="${visit.description}" style="width: 50%"/>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <a class="mini ui green button" th:href="@{/visits/add(petId=${pet.id})}">Add Visit</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Add Veterinarian')">
+</head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            firstName : {
+                identifier : 'firstName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please first name'
+                    }
+                ]
+            },
+            lastName : {
+                identifier : 'lastName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please last name'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='add vet')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Add Veterinarian</h1>
+
+    <form method="post" action="add" role="form" class="ui form">
+        <div class="field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="First Name"/>
+        </div>
+        <div class="field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name"/>
+        </div>
+        <div class="field">
+            <label>Specialities</label>
+        </div>
+        <div class="ui segment">
+            <div th:each="speciality : ${specialities}" class="field">
+                <div class="ui checkbox">
+                    <input type="checkbox" th:name="${speciality.name}"/>
+                    <label th:text="${speciality.name}"/>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="ui green submit button">Add</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

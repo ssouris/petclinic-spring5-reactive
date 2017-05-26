@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Pet Types')"></head>
+<body>
+
+<div th:include="fragments/bodyHeader (tab='petTypes')" th:remove="tag"></div>
+
+<div class="container">
+    <div class="ui grid">
+        <div class="nine wide column">
+            <h1 class="ui header">Pet Types</h1>
+        </div>
+        <div class="seven wide column">
+            <a href="add" class="ui button green" style="float: right; margin-left: 1em;">Add Pet Type</a>
+        </div>
+    </div>
+
+    <table class="ui table segment" th:if="${not petTypes.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <!--<th style="width: 30%"></th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="petType: ${petTypes}">
+            <td> <a th:text="${petType.name}" th:href="@{edit(id=${petType.id})}"></a></td>
+            <!--<td>
+                <a href="@{edit(id=${petType.id})}" class="ui mini button blue" style="float: left; margin-right: 1em;">Edit</a>
+                <form th:action="@{delete(id=${petType.id})}" method="post" style="float: left; margin-right: 1em;"><input type="submit"
+                                                                           class="ui mini button red"
+                                                                           value="Delete"/>
+                </form>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

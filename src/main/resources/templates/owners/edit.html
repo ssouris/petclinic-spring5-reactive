@@ -1,0 +1,91 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Owner')"></head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            firstName : {
+                identifier : 'firstName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter first name'
+                    }
+                ]
+            },
+            lastName : {
+                identifier : 'lastName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter last name'
+                    }
+                ]
+            },
+            address : {
+                identifier : 'address',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter address'
+                    }
+                ]
+            },
+            city : {
+                identifier : 'city',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter city'
+                    }
+                ]
+            },
+            telephone : {
+                identifier : 'telephone',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter telephone'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='edit owner')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Edit Owner</h1>
+
+    <form method="post" action="edit" role="form" class="ui form">
+        <input type="hidden" id="id" name="id" th:value="${id}"/>
+        <div class="field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="First Name" th:value="${firstName}"/>
+        </div>
+        <div class="field">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name" th:value="${lastName}"/>
+        </div>
+        <div class="field">
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" placeholder="Address"  th:value="${address}"/>
+        </div>
+        <div class="field">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" placeholder="City" th:value="${city}"/>
+        </div>
+        <div class="field">
+            <label for="telephone">Telephone:</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Telephone" th:value="${telephone}"/>
+        </div>
+        <button type="submit" class="ui blue submit button">Save</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

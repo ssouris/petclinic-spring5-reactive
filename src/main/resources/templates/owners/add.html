@@ -1,0 +1,90 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Add Owner')">
+</head>
+<body>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            firstName : {
+                identifier : 'firstName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter first name'
+                    }
+                ]
+            },
+            lastName : {
+                identifier : 'lastName',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter last name'
+                    }
+                ]
+            },
+            address : {
+                identifier : 'address',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter address'
+                    }
+                ]
+            },
+            city : {
+                identifier : 'city',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter city'
+                    }
+                ]
+            },
+            telephone : {
+                identifier : 'telephone',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter telephone'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='add owner')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Add Owner</h1>
+
+    <form method="post" action="add" role="form" class="ui form">
+        <div class="field">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="First Name"/>
+        </div>
+        <div class="field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name"/>
+        </div>
+        <div class="field">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Address"/>
+        </div>
+        <div class="field">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="City"/>
+        </div>
+        <div class="field">
+            <label for="telephone">Telephone</label>
+            <input type="text" id="telephone" name="telephone" placeholder="Telephone"/>
+        </div>
+        <button type="submit" class="ui green submit button">Add</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+html, body {
+    font-size: 15px;
+    height: 100%;
+}
+
+body {
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    background: #FFFFFF;
+    background-image: url("../images/bg.jpg");
+    margin: 0px;
+    padding: 0px;
+    color: #555555;
+    text-rendering: optimizeLegibility;
+    min-width: 320px;
+}
+
+#example .container {
+    width: auto;
+    margin: 0 200px;
+}
+
+#example .ui.menu {
+    padding: 0 200px;
+}
+
+#example .ui.footer.list {
+    display: block;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}

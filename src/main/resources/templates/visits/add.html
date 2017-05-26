@@ -1,0 +1,65 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Add Pet Visit')"></head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            date : {
+                identifier : 'date',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please date'
+                    }
+                ]
+            },
+            description : {
+                identifier : 'description',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please description'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='add visit')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Add Pet Visit</h1>
+
+    <form method="post" action="add" role="form" class="ui form">
+        <input name="petId" type="hidden" th:value="${pet.id}"/>
+
+        <div class="field">
+            <label for="ownerName">Owner</label>
+            <input type="text" id="ownerName" th:value="${owner.firstName + ' ' + owner.lastName}" readonly="true"/>
+        </div>
+        <div class="field">
+            <label for="petName">Pet</label>
+            <input type="text" id="petName" th:value="${pet.name}" readonly="true"/>
+        </div>
+        <div class="field">
+            <label for="petBirthDate">Birth Date</label>
+            <input type="text" id="petBirthDate" th:value="${pet.birthDate.toString('dd/MM/yyyy')}" readonly="true"/>
+        </div>
+        <div class="date field">
+            <label for="date">Date</label>
+            <input type="text" id="date" name="date" placeholder="dd/MM/yyyy"/>
+        </div>
+        <div class="field">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" placeholder="Description"/>
+        </div>
+        <button type="submit" class="ui blue submit button">Add</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>

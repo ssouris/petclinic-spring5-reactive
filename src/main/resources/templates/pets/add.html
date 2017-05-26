@@ -1,0 +1,69 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head th:replace="fragments/headTag :: headTag (title='Add Pet')"></head>
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".ui.form").form({
+            name : {
+                identifier : 'name',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter pet name'
+                    }
+                ]
+            },
+            birthDate : {
+                identifier : 'birthDate',
+                rules : [
+                    {
+                        type : 'empty',
+                        prompt : 'Please enter birth date'
+                    }
+                ]
+            }
+        })
+    })
+</script>
+
+<div th:include="fragments/bodyHeader (tab='add pet')" th:remove="tag"></div>
+
+<div class="container">
+    <h1 class="ui header">Add Pet</h1>
+
+    <form method="post" action="add" role="form" class="ui form">
+        <input name="ownerId" type="hidden" th:value="${owner.id}"/>
+
+        <div class="field">
+            <label for="ownerName">Owner</label>
+            <input type="text" id="ownerName" th:value="${owner.firstName + ' ' + owner.lastName}" readonly="true"/>
+        </div>
+        <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Name"/>
+        </div>
+        <div class="date field">
+            <label for="birthDate">Birth Date</label>
+            <input type="text" id="birthDate" name="birthDate" placeholder="dd/MM/yyyy"/>
+        </div>
+        <div class="field">
+            <label>Type</label>
+        </div>
+        <div class="grouped inline fields ui segment">
+            <div th:each="petType : ${petTypes}" class="field">
+                <div class="ui radio checkbox">
+                    <input type="radio" name="typeId"
+                           th:value="${petType.id}"/>
+                    <label th:text="${petType.name}"/>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="ui blue submit button">Save</button>
+    </form>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+</html>
