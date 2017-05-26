@@ -1,5 +1,3 @@
-import com.moowork.gradle.gulp.GulpTask
-import com.moowork.gradle.node.yarn.YarnInstallTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -53,6 +51,8 @@ dependencies {
     }
     compileOnly("org.springframework:spring-context-indexer")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+
     testCompile("org.springframework.boot:spring-boot-starter-test")
     runtime("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
