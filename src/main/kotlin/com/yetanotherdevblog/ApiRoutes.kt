@@ -36,7 +36,7 @@ class ApiRoutes(val blogHandler: MyBlogPostHandler) {
     @Bean
     fun petClinicRouter(ownersHandler: OwnersHandler) = router {
         "/owners".nest {
-            GET("/", ownersHandler::index)
+            GET("/", ownersHandler::goToOwnersIndex)
             "/add".nest {
                 GET("/", ownersHandler::goToAddPage)
                 POST("/", ownersHandler::add)
