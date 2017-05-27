@@ -51,12 +51,12 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
         return serverRequest.body(BodyExtractors.toFormData()).flatMap {
                 val formData = it.toSingleValueMap()
                 ownersRepository.save(Owner(
-                        id = formData["id"] ?: UUID.randomUUID().toString(),
+                               id = formData["id"] ?: UUID.randomUUID().toString(),
                         firstName = formData["firstName"]!!,
-                        lastName = formData["lastName"]!!,
-                        address = formData["address"]!!,
+                         lastName = formData["lastName"]!!,
+                          address = formData["address"]!!,
                         telephone = formData["telephone"]!!,
-                        city = formData["city"]!!
+                             city = formData["city"]!!
                 ))
         }.then(goToOwnersIndex())
     }
