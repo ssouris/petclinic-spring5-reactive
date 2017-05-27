@@ -1,4 +1,5 @@
 # My First Spring 5 Reactive application
+[![Build Status](https://travis-ci.org/ssouris/spring5-reactive-sample.svg)](https://travis-ci.org/ssouris/spring5-reactive-sample)
 
 ## Software design
  - Reactive and non-blocking
