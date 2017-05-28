@@ -1,5 +1,6 @@
 package com.yetanotherdevblog.petclinic.handlers
 
+import com.yetanotherdevblog.html
 import com.yetanotherdevblog.petclinic.model.PetType
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
 import org.springframework.http.MediaType
@@ -29,7 +30,7 @@ class PetTypeHandler(val petTypeRepository: PetTypeRepository) {
     fun goToEdit(serverRequest: ServerRequest): Mono<ServerResponse> {
         return petTypeRepository.findById(serverRequest.queryParam("id").orElse("")).map {
             mapOf("id" to it.id, "name" to it.name)
-        }.flatMap { ok().contentType(MediaType.TEXT_HTML).render("petTypes/edit", it) }
+        }.flatMap { ok().html().render("petTypes/edit", it) }
     }
 
     fun edit(serverRequest: ServerRequest): Mono<ServerResponse> {
@@ -43,7 +44,7 @@ class PetTypeHandler(val petTypeRepository: PetTypeRepository) {
         return goToIndex()
     }
 
-    private fun goToIndex(): Mono<ServerResponse> = ok().contentType(MediaType.TEXT_HTML)
+    private fun goToIndex(): Mono<ServerResponse> = ok().html()
             .render("petTypes/index", mapOf("petTypes" to petTypeRepository.findAll()))
 
 }

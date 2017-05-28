@@ -1,5 +1,6 @@
 package com.yetanotherdevblog.petclinic.handlers
 
+import com.yetanotherdevblog.html
 import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 
 import com.yetanotherdevblog.petclinic.model.Owner
@@ -23,12 +24,12 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
 
     // search query?
     fun goToOwnersIndex(): Mono<ServerResponse> =
-            ok().contentType(MediaType.TEXT_HTML).render(
+            ok().html().render(
                     "owners/index",
                     mapOf("owners" to ownersRepository.findAll().map { it to emptySet<Pet>() }))
 
     fun goToAddPage(serverRequest: ServerRequest) =
-            ok().contentType(MediaType.TEXT_HTML).render("owners/add")
+            ok().html().render("owners/add")
 
     fun goToEditPage(serverRequest: ServerRequest) =
             serverRequest.queryParam("id")
@@ -40,7 +41,7 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
                                 "address" to it.address,
                                 "city" to it.city,
                                 "telephone" to it.telephone)
-                    }.flatMap { ok().contentType(MediaType.TEXT_HTML).render("owners/edit", it) }
+                    }.flatMap { ok().html().render("owners/edit", it) }
 
     fun view(serverRequest: ServerRequest) : Mono<ServerResponse> {
         val owner: Mono<Owner> = serverRequest.queryParam("id")
@@ -52,7 +53,7 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
                             "pets" to Flux.empty<Pet>(),
                             "petTypes" to Flux.empty<PetType>(),
                             "petVisits" to Flux.empty<Visit>())
-                    ok().contentType(MediaType.TEXT_HTML).render("owners/view", model)
+                    ok().html().render("owners/view", model)
                 }
                 .switchIfEmpty(ServerResponse.notFound().build())
     }
@@ -86,3 +87,4 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
     }
 
 }
+

@@ -1,5 +1,6 @@
 package com.yetanotherdevblog.petclinic.handlers
 
+import com.yetanotherdevblog.html
 import com.yetanotherdevblog.petclinic.model.Speciality
 import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
 import org.springframework.http.MediaType
@@ -17,7 +18,7 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
     fun goToSpecialitiesIndex(serverRequest: ServerRequest) = goToIndex()
 
     fun goToAdd(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return ok().contentType(MediaType.TEXT_HTML)
+        return ok().html()
                 .render("specialities/add")
     }
 
@@ -33,7 +34,7 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
     fun goToEdit(serverRequest: ServerRequest): Mono<ServerResponse> {
         return specialityRepository.findById(serverRequest.queryParam("id").orElse("")).map {
             mapOf("id" to it.id, "name" to it.name)
-        }.flatMap { ok().contentType(MediaType.TEXT_HTML).render("specialities/edit", it) }
+        }.flatMap { ok().html().render("specialities/edit", it) }
     }
 
     fun edit(serverRequest: ServerRequest): Mono<ServerResponse> {
@@ -49,7 +50,7 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
         return goToIndex()
     }
 
-    private fun goToIndex() = ok().contentType(MediaType.TEXT_HTML)
+    private fun goToIndex() = ok().html()
             .render("specialities/index", mapOf("specialities" to specialityRepository.findAll()))
 
 }

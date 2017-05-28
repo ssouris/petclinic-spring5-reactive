@@ -18,14 +18,14 @@ import reactor.core.publisher.Mono
 
 
 @Configuration
-class ApiRoutes(val blogHandler: MyBlogPostHandler) {
+class ApiRoutes() {
 
     @Bean
     @DependsOn("petClinicRouter")
     fun resourceRouter() = resources("/**", ClassPathResource("static/"))
 
     @Bean
-    fun simpleRouter() = router {
+    fun simpleRouter(blogHandler: MyBlogPostHandler) = router {
         "/posts".nest {
             GET("/{id}", blogHandler::getBlogPost)
             GET("/", blogHandler::getBlogPosts)

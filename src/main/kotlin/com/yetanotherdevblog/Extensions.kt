@@ -1,16 +1,21 @@
 package com.yetanotherdevblog
 
 import org.springframework.data.mongodb.core.ReactiveMongoOperations
-import org.springframework.http.MediaType.*
-import org.springframework.web.reactive.function.server.ServerResponse.*
+import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
+import org.springframework.http.MediaType.TEXT_EVENT_STREAM
+import org.springframework.http.MediaType.TEXT_HTML
+import org.springframework.http.ResponseEntity
+import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Flux
 
 inline fun <reified T : Any> ReactiveMongoOperations.findAll(): Flux<T> =
         findAll(T::class.java)
 
-fun BodyBuilder.json() = contentType(APPLICATION_JSON_UTF8)
+fun ServerResponse.BodyBuilder.json() = contentType(APPLICATION_JSON_UTF8)
 
-fun BodyBuilder.textEventStream() = contentType(TEXT_EVENT_STREAM)
+fun ServerResponse.BodyBuilder.textEventStream() = contentType(TEXT_EVENT_STREAM)
+
+fun ServerResponse.BodyBuilder.html() = contentType(TEXT_HTML)
 
 // port StringUtils to Kotlin method extensions
 fun CharSequence.isEmpty() = this.length == 0
