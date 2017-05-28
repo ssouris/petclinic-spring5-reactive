@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag (title='Home')"></head>
+
+<body>
+
+<div th:include="fragments/bodyHeader (tab='home')" th:remove="tag"></div>
+
+<h2>Welcome</h2>
+<div class="row">
+    <div class="col-md-12">
+        <img class="img-responsive" src="../static/resources/images/pets.png" th:src="@{/resources/images/pets.png}"/>
+    </div>
+</div>
+
+<div th:include="fragments/bodyFooter" th:remove="tag"></div>
+</body>
+
+</html>

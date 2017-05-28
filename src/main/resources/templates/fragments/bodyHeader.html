@@ -5,6 +5,7 @@
 
 <div class="ui menu teal inverted">
     <a class="title item" href="/"><strong>Pet Clinic</strong></a>
+    <a th:class="${tab == 'home' }? 'active item' : 'item'" href="/">Home</a>
     <a th:class="${tab == 'owners' }? 'active item' : 'item'" href="/owners/">Find Owners</a>
     <a th:class="${tab == 'vets' }? 'active item' : 'item'" href="/vets/">Veterinarians</a>
     <a th:class="${tab == 'specialities' }? 'active item' : 'item'" href="/specialities/">Specialities</a>

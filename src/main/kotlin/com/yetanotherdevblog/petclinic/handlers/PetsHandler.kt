@@ -1,7 +1,9 @@
 package com.yetanotherdevblog.petclinic.handlers
 
 import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.model.Vet
+import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
 import com.yetanotherdevblog.petclinic.repositories.VetRepository
 import org.springframework.stereotype.Component
@@ -13,19 +15,22 @@ import reactor.core.publisher.Mono
 import java.util.UUID
 
 @Component
-class VetsHandler(val vetRepository: VetRepository, val specialityRepository: SpecialityRepository) {
+class PetsHandler(val petRepository: VetRepository, val ownersRepository: OwnersRepository) {
 
-    fun goToVetsIndex(serverRequest: ServerRequest) = goToIndex()
+    fun goToPetsIndex(serverRequest: ServerRequest) = goToIndex()
 
     fun goToAdd(serverRequest: ServerRequest): Mono<ServerResponse> {
         return ok().html()
-                .render("vets/add", mapOf("specialities" to specialityRepository.findAll()))
+                .render("pets/add", mapOf(
+                        "owner" to
+                        ownersRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()}))
+                ))
     }
 
     fun add(serverRequest: ServerRequest): Mono<ServerResponse> {
         return serverRequest.body(BodyExtractors.toFormData()).flatMap {
             formData ->
-            vetRepository.save(Vet(
+            petRepository.save(Vet(
                     id = UUID.randomUUID().toString(),
                     firstName = formData["firstName"]?.get(0)!!,
                     lastName = formData["lastName"]?.get(0)!!,
@@ -34,19 +39,14 @@ class VetsHandler(val vetRepository: VetRepository, val specialityRepository: Sp
     }
 
     fun goToEdit(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return vetRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()})).map {
-            mapOf("vet" to it, "specialities" to specialityRepository.findAll())
-        }.flatMap { ok().html().render("vets/edit", it) }
+        return petRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()})).map {
+            mapOf("pet" to it)
+        }.flatMap { ok().html().render("pets/edit", it) }
     }
 
     fun edit(serverRequest: ServerRequest): Mono<ServerResponse> {
         return serverRequest.body(BodyExtractors.toFormData()).flatMap {
-            formData ->
-            vetRepository.save(Vet(
-                    id = formData["id"]?.get(0)!!,
-                    firstName = formData["firstName"]?.get(0)!!,
-                    lastName = formData["lastName"]?.get(0)!!,
-                    specialities = formData["specialities"]?.toCollection(HashSet<String>())!!))
+            formData -> Mono.empty<Pet>()
         }.then(goToIndex())
     }
 
@@ -55,6 +55,6 @@ class VetsHandler(val vetRepository: VetRepository, val specialityRepository: Sp
     }
 
     private fun goToIndex(): Mono<ServerResponse> = ok().html()
-            .render("vets/index", mapOf("vets" to vetRepository.findAll()))
+            .render("pets/index", mapOf("pets" to petRepository.findAll()))
 
 }

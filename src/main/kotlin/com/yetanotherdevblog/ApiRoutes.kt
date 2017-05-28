@@ -2,6 +2,7 @@ package com.yetanotherdevblog
 
 import com.yetanotherdevblog.petclinic.handlers.OwnersHandler
 import com.yetanotherdevblog.petclinic.handlers.PetTypeHandler
+import com.yetanotherdevblog.petclinic.handlers.PetsHandler
 import com.yetanotherdevblog.petclinic.handlers.SpecialitiesHandler
 import com.yetanotherdevblog.petclinic.handlers.VetsHandler
 import org.springframework.context.annotation.Bean
@@ -41,8 +42,10 @@ class ApiRoutes() {
     fun petClinicRouter(ownersHandler: OwnersHandler,
                         specialitiesHandler: SpecialitiesHandler,
                         vetsHandler: VetsHandler,
+                        petsHandler: PetsHandler,
                         petTypeHandler: PetTypeHandler) =
             router {
+                GET("/", { ok().html().render("welcome") })
                 "/owners".nest {
                     GET("/", ownersHandler::goToOwnersIndex)
                     "/add".nest {
@@ -69,6 +72,16 @@ class ApiRoutes() {
                     "/edit".nest {
                         GET("/", vetsHandler::goToEdit)
                         POST("/", vetsHandler::edit)
+                    }
+                }
+                "/pets".nest {
+                    "/add".nest {
+                        GET("/", petsHandler::goToAdd)
+                        POST("/", petsHandler::add)
+                    }
+                    "/edit".nest {
+                        GET("/", petsHandler::goToEdit)
+                        POST("/", petsHandler::edit)
                     }
                 }
                 "/specialities".nest {
