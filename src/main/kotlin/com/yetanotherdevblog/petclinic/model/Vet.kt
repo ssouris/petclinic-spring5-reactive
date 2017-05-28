@@ -8,4 +8,4 @@ data class Vet(
         @Id val id:String,
         val firstName: String,
         val lastName : String,
-        val specialities: Set<String>)
+        val specialities: Set<Speciality>)
