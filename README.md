@@ -1,11 +1,11 @@
-# My First Spring 5 Reactive application
+# PetClinic (Spring 5/Reactive)
 [![Build Status](https://travis-ci.org/ssouris/spring5-reactive-sample.svg)](https://travis-ci.org/ssouris/spring5-reactive-sample)
+
+This is a rewrite of PetClinic using Kotlin, Spring 5 and its reactive APIs (Flux, Mono).
 
 ## Software design
  - Reactive and non-blocking
- - More functional style and less annotation based than typical Spring applications
  - Leverage Kotlin features like [Kotlin extensions] and [reified type parameters] for cleaner code
- - Simple, fast to start, efficient request processing, low memory consumption
 
 ### Technologies used
 
@@ -27,3 +27,11 @@
 ./gradlew clean build
 java -jar build/libs/......-1.0.0-SNAPSHOT.jar
 ```
+
+## TODO
+
+ - Validation
+ - Error handling (what happens when an entitiy is not present in the db)
+ - Search query in Owners page
+ - More testing
+
