@@ -1,25 +1,19 @@
 package com.yetanotherdevblog.petclinic.handlers
 
-import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.html
 import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 
 import com.yetanotherdevblog.petclinic.model.Owner
 import com.yetanotherdevblog.petclinic.model.Pet
-import com.yetanotherdevblog.petclinic.model.PetType
-import com.yetanotherdevblog.petclinic.model.Visit
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
 import com.yetanotherdevblog.petclinic.repositories.VisitRepository
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.core.publisher.toMono
-import java.util.Date
 import java.util.UUID
 
 @Component
@@ -86,12 +80,6 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
         return owner
                 .flatMap { ownersRepository.save(it) }
                 .flatMap { ok().render("owners/edit", it) }
-    }
-
-    fun delete(serverRequest: ServerRequest) : Mono<ServerResponse> {
-        val ownerDeleted: Mono<Void> = serverRequest.queryParam("id")
-                .map { ownersRepository.deleteById(it) }.orElse(Mono.empty<Void>())
-        return ok().body(ownerDeleted, Void::class.java)
     }
 
 }

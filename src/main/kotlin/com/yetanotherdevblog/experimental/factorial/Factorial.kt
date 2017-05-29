@@ -1,4 +1,4 @@
-package com.yetanotherdevblog.factorial
+package com.yetanotherdevblog.experimental.factorial
 
 val zero = java.math.BigInteger.ZERO
 val one = java.math.BigInteger.ONE

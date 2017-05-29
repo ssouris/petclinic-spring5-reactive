@@ -1,9 +1,8 @@
 package com.yetanotherdevblog.petclinic.handlers
 
-import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.html
 import com.yetanotherdevblog.petclinic.model.Speciality
 import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -44,10 +43,6 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
                     id = formData["id"]!!,
                     name = formData["name"]!!))
         }.then(goToIndex())
-    }
-
-    fun delete(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return goToIndex()
     }
 
     private fun goToIndex() = ok().html()

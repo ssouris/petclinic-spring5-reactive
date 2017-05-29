@@ -1,6 +1,6 @@
 package com.yetanotherdevblog.petclinic.handlers
 
-import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.html
 import com.yetanotherdevblog.petclinic.model.PetType
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
 import org.springframework.http.MediaType
@@ -38,10 +38,6 @@ class PetTypeHandler(val petTypeRepository: PetTypeRepository) {
             val formData = it.toSingleValueMap()
             petTypeRepository.save(PetType(id = formData["id"]!!, name = formData["name"]!!))
         }.then(goToIndex())
-    }
-
-    fun delete(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return goToIndex()
     }
 
     private fun goToIndex(): Mono<ServerResponse> = ok().html()

@@ -1,11 +1,11 @@
 package com.yetanotherdevblog.petclinic.handlers
 
-import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.html
 import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
-import com.yetanotherdevblog.toDate
+import com.yetanotherdevblog.petclinic.toDate
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -55,14 +55,10 @@ class PetsHandler(val petRepository: PetRepository,
                          name = formData["name"]!!,
                     birthDate = formData["birthDate"]!!.toDate(),
                         owner = formData["ownerId"]!!,
-                         type = formData["typeId"]!!
+                         type = formData["type"]!!
 
             ))
         }.then(ownersHandler.goToOwnersIndex())
-    }
-
-    fun delete(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return ownersHandler.goToOwnersIndex()
     }
 
 }

@@ -1,6 +1,6 @@
 package com.yetanotherdevblog.petclinic.handlers
 
-import com.yetanotherdevblog.html
+import com.yetanotherdevblog.petclinic.html
 import com.yetanotherdevblog.petclinic.model.Vet
 import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
 import com.yetanotherdevblog.petclinic.repositories.VetRepository
@@ -48,10 +48,6 @@ class VetsHandler(val vetRepository: VetRepository, val specialityRepository: Sp
                     lastName = formData["lastName"]?.get(0)!!,
                     specialities = formData["specialities"]?.toCollection(HashSet<String>())!!))
         }.then(goToIndex())
-    }
-
-    fun delete(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return goToIndex()
     }
 
     private fun goToIndex(): Mono<ServerResponse> = ok().html()

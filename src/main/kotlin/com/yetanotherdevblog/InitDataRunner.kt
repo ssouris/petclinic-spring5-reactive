@@ -12,17 +12,15 @@ import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
 import com.yetanotherdevblog.petclinic.repositories.VetRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Mono
 import java.time.LocalDate
-import java.util.Date
 import java.util.UUID
 
 @Component
-class InitializeDb(val petTypeRepository: PetTypeRepository,
-                   val specialityRepository: SpecialityRepository,
-                   val vetRepository: VetRepository,
-                   val ownersRepository: OwnersRepository,
-                   val petRepository: PetRepository): CommandLineRunner {
+class InitDataRunner(val petTypeRepository: PetTypeRepository,
+                     val specialityRepository: SpecialityRepository,
+                     val vetRepository: VetRepository,
+                     val ownersRepository: OwnersRepository,
+                     val petRepository: PetRepository): CommandLineRunner {
 
     override fun run(vararg args: String?) {
 
@@ -32,14 +30,16 @@ class InitializeDb(val petTypeRepository: PetTypeRepository,
         petTypeRepository.deleteAll().subscribe(null, null, {
             val petTypes = listOf("cat", "lizard", "snake", "bird", "hamster", "dog")
                     .map { if (it == "dog") PetType(name=it, id = dogId) else PetType(name = it) }
-            petTypeRepository.saveAll(petTypes).subscribe( null, null, { println("Added  PetTypes") })
+            petTypeRepository.saveAll(petTypes)
+                    .subscribe( null, null, { println("Added  PetTypes") })
         })
 
 
         specialityRepository.deleteAll().subscribe(null, null, {
             val specialities = listOf("radiology", "dentistry", "surgery")
                     .map {Speciality(name = it)}
-            specialityRepository.saveAll(specialities).subscribe( null, null, { println("Added  Specialities") })
+            specialityRepository.saveAll(specialities)
+                    .subscribe( null, null, { println("Added  Specialities") })
         })
 
         vetRepository.deleteAll().subscribe(null, null, {
@@ -65,7 +65,11 @@ class InitializeDb(val petTypeRepository: PetTypeRepository,
 
 
         petRepository.deleteAll().subscribe(null, null, {
-            petRepository.saveAll(listOf(Pet(name = "Some name", birthDate = LocalDate.now(), type = dogId, owner = ownerId)))
+            petRepository.saveAll(listOf(Pet(
+                    name = "Some name",
+                    birthDate = LocalDate.now(),
+                    type = dogId,
+                    owner = ownerId)))
                     .subscribe( null, null, { println("Added Pets") })
 
         })

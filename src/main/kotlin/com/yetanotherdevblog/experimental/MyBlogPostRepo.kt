@@ -1,5 +1,6 @@
-package com.yetanotherdevblog
+package com.yetanotherdevblog.experimental
 
+import com.yetanotherdevblog.petclinic.findAll
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.stereotype.Repository
 

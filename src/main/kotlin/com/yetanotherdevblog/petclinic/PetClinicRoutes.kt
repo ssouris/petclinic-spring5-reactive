@@ -1,5 +1,6 @@
-package com.yetanotherdevblog
+package com.yetanotherdevblog.petclinic
 
+import com.yetanotherdevblog.experimental.MyBlogPostHandler
 import com.yetanotherdevblog.petclinic.handlers.OwnersHandler
 import com.yetanotherdevblog.petclinic.handlers.PetTypeHandler
 import com.yetanotherdevblog.petclinic.handlers.PetsHandler
@@ -20,7 +21,7 @@ import reactor.core.publisher.Mono
 
 
 @Configuration
-class ApiRoutes() {
+class PetClinicRoutes() {
 
     @Bean
     @DependsOn("petClinicRouter")
@@ -45,7 +46,7 @@ class ApiRoutes() {
                         vetsHandler: VetsHandler,
                         petsHandler: PetsHandler,
                         petTypeHandler: PetTypeHandler,
-                        visitHandler:VisitHandler) =
+                        visitHandler: VisitHandler) =
             router {
                 GET("/", { ok().html().render("welcome") })
                 "/owners".nest {
@@ -60,9 +61,6 @@ class ApiRoutes() {
                     }
                     "/view".nest {
                         GET("/", ownersHandler::view)
-                    }
-                    "/delete".nest {
-                        POST("/", ownersHandler::delete)
                     }
                 }
                 "/vets".nest {
@@ -106,9 +104,6 @@ class ApiRoutes() {
                         GET("/", specialitiesHandler::goToEdit)
                         POST("/", specialitiesHandler::edit)
                     }
-                    "/delete".nest {
-                        POST("/", specialitiesHandler::delete)
-                    }
                 }
                 "/petTypes".nest {
                     GET("/", petTypeHandler::goToPetTypeIndex)
@@ -119,9 +114,6 @@ class ApiRoutes() {
                     "/edit".nest {
                         GET("/", petTypeHandler::goToEdit)
                         POST("/", petTypeHandler::edit)
-                    }
-                    "/delete".nest {
-                        POST("/", petTypeHandler::delete)
                     }
                 }
 
