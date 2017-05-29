@@ -39,8 +39,8 @@
             <td th:text="${owner.first.address}"></td>
             <td th:text="${owner.first.telephone}"></td>
             <td>
-                <div th:if="${not owner.second.isEmpty()}">
-                    <span class="ui small label teal" th:each="pet: ${owner.second}" th:text="${pet.name}"/>
+                <div th:if="${pets[owner.first.id] != null && not pets[owner.first.id].isEmpty()}">
+                    <span class="ui small label teal" th:each="pet: ${pets[owner.first.id]}" th:text="${pet.name}"/>
                 </div>
             </td>
         </tr>

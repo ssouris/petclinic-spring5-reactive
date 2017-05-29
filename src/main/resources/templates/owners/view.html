@@ -51,12 +51,12 @@
         <tbody>
         <tr th:each="pet: ${pets}">
             <td style="vertical-align: top"><a th:href="@{/pets/edit(id=${pet.id})}" th:text="${pet.name}"></a></td>
-            <td style="vertical-align: top" th:text="${petTypes.get(pet).name}"></td>
+            <td style="vertical-align: top" th:text="${petTypes.get(pet.type)}"></td>
             <td colspan="2" style="padding: 0">
                 <table class="ui table small " style="width: 100%">
-                    <tr th:each="visit: ${petVisits.get(pet)}">
+                    <tr th:each="visit: ${petVisits.get(pet.id)}">
                         <td style="width: 50%">
-                            <a th:text="${visit.visitDate}" th:href="@{/visits/edit(id=${visit.id})}"></a>
+                            <a th:text="${#temporals.format(visit.visitDate, 'dd/MM/yyyy')}" th:href="@{/visits/edit(id=${visit.id})}"></a>
                         </td>
                         <td th:text="${visit.description}" style="width: 50%"/>
                     </tr>

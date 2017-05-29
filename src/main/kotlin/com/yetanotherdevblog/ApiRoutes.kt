@@ -5,6 +5,7 @@ import com.yetanotherdevblog.petclinic.handlers.PetTypeHandler
 import com.yetanotherdevblog.petclinic.handlers.PetsHandler
 import com.yetanotherdevblog.petclinic.handlers.SpecialitiesHandler
 import com.yetanotherdevblog.petclinic.handlers.VetsHandler
+import com.yetanotherdevblog.petclinic.handlers.VisitHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.DependsOn
@@ -43,7 +44,8 @@ class ApiRoutes() {
                         specialitiesHandler: SpecialitiesHandler,
                         vetsHandler: VetsHandler,
                         petsHandler: PetsHandler,
-                        petTypeHandler: PetTypeHandler) =
+                        petTypeHandler: PetTypeHandler,
+                        visitHandler:VisitHandler) =
             router {
                 GET("/", { ok().html().render("welcome") })
                 "/owners".nest {
@@ -82,6 +84,16 @@ class ApiRoutes() {
                     "/edit".nest {
                         GET("/", petsHandler::goToEdit)
                         POST("/", petsHandler::edit)
+                    }
+                }
+                "/visits".nest {
+                    "/add".nest {
+                        GET("/", visitHandler::goToAdd)
+                        POST("/", visitHandler::add)
+                    }
+                    "/edit".nest {
+                        GET("/", visitHandler::goToEdit)
+                        POST("/", visitHandler::edit)
                     }
                 }
                 "/specialities".nest {

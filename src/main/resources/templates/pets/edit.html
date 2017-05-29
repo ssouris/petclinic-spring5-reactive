@@ -35,6 +35,7 @@
 
     <form method="post" action="edit" role="form" class="ui form">
         <input name="id" type="hidden" th:value="${pet.id}"/>
+        <input name="ownerId" type="hidden" th:value="${owner.id}"/>
 
         <div class="field">
             <label for="ownerName">Owner</label>
@@ -47,7 +48,7 @@
         <div class="date field">
             <label for="birthDate">Birth Date</label>
             <input type="text" id="birthDate" name="birthDate" placeholder="dd/MM/yyyy"
-                   th:value="${pet.birthDate.toString('dd/MM/yyyy')}"/>
+                   th:value="${#temporals.format(pet.birthDate, 'dd/MM/yyyy')}"/>
         </div>
         <div class="field">
             <label>Type</label>
@@ -55,7 +56,7 @@
         <div class="grouped inline fields ui segment">
             <div th:each="petType : ${petTypes}" class="field">
                 <div class="ui radio checkbox">
-                    <input type="radio" th:field="*{pet.typeId}" name="typeId"
+                    <input type="radio" th:field="*{pet.type}" name="typeId"
                            th:value="${petType.id}"/>
                     <label th:text="${petType.name}"/>
                 </div>

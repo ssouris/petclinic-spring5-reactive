@@ -7,6 +7,11 @@ import org.springframework.http.MediaType.TEXT_HTML
 import org.springframework.http.ResponseEntity
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Flux
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.UUID
 
 inline fun <reified T : Any> ReactiveMongoOperations.findAll(): Flux<T> =
         findAll(T::class.java)
@@ -16,6 +21,13 @@ fun ServerResponse.BodyBuilder.json() = contentType(APPLICATION_JSON_UTF8)
 fun ServerResponse.BodyBuilder.textEventStream() = contentType(TEXT_EVENT_STREAM)
 
 fun ServerResponse.BodyBuilder.html() = contentType(TEXT_HTML)
+
+
+fun LocalDate.toString(format:String): String {
+    return DateTimeFormatter.ofPattern(format).format(this)
+}
+
+fun String.toDate() = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
 // port StringUtils to Kotlin method extensions
 fun CharSequence.isEmpty() = this.length == 0

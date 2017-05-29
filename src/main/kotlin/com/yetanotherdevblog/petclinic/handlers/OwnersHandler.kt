@@ -7,6 +7,9 @@ import com.yetanotherdevblog.petclinic.model.Owner
 import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.model.PetType
 import com.yetanotherdevblog.petclinic.model.Visit
+import com.yetanotherdevblog.petclinic.repositories.PetRepository
+import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
+import com.yetanotherdevblog.petclinic.repositories.VisitRepository
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
@@ -15,18 +18,23 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
+import java.util.Date
 import java.util.UUID
 
 @Component
-class OwnersHandler(val ownersRepository: OwnersRepository) {
+class OwnersHandler(val ownersRepository: OwnersRepository,
+                    val petRepository: PetRepository,
+                    val petTypeRepository: PetTypeRepository,
+                    val visitRepository: VisitRepository) {
 
     fun goToOwnersIndex(serverRequest: ServerRequest) = goToOwnersIndex()
 
-    // search query?
-    fun goToOwnersIndex(): Mono<ServerResponse> =
-            ok().html().render(
-                    "owners/index",
-                    mapOf("owners" to ownersRepository.findAll().map { it to emptySet<Pet>() }))
+    fun goToOwnersIndex(): Mono<ServerResponse> {
+        return ok().html().render("owners/index",
+                mapOf("owners" to ownersRepository.findAll().map { Pair(it, emptySet<Pet>()) },
+                        "pets" to petRepository.findAll().collectMultimap { it.owner }))
+    }
 
     fun goToAddPage(serverRequest: ServerRequest) =
             ok().html().render("owners/add")
@@ -44,15 +52,15 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
                     }.flatMap { ok().html().render("owners/edit", it) }
 
     fun view(serverRequest: ServerRequest) : Mono<ServerResponse> {
-        val owner: Mono<Owner> = serverRequest.queryParam("id")
-                .map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
-        return owner
+        return serverRequest.queryParam("id")
+                .map { ownersRepository.findById(it) }
+                .orElse(Mono.empty<Owner>())
                 .flatMap { owner ->
                     val model = mapOf<String, Any>(
                             "owner" to owner,
-                            "pets" to Flux.empty<Pet>(),
-                            "petTypes" to Flux.empty<PetType>(),
-                            "petVisits" to Flux.empty<Visit>())
+                            "pets" to petRepository.findAllByOwner(owner.id),
+                            "petTypes" to petTypeRepository.findAll().collectMap({ it.id }, {it.name}),
+                            "petVisits" to visitRepository.findAll().collectMultimap { it.petId })
                     ok().html().render("owners/view", model)
                 }
                 .switchIfEmpty(ServerResponse.notFound().build())
@@ -87,4 +95,5 @@ class OwnersHandler(val ownersRepository: OwnersRepository) {
     }
 
 }
+
 

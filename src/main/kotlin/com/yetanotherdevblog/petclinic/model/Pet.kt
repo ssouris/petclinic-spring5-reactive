@@ -3,12 +3,15 @@ package com.yetanotherdevblog.petclinic.model
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
+import java.time.LocalDate
 import java.util.Date
+import java.util.UUID
 
 @Document
 data class Pet(
-        @Id val id:String,
-        val birthDate: Date,
-        val type: PetType,
-        @DBRef val owner: Owner,
-        val visits : Set<Visit>)
+        @Id val id:String = UUID.randomUUID().toString(),
+        val name: String,
+        val birthDate: LocalDate,
+        val type: String,
+        val owner: String,
+        val visits : Set<Visit> = emptySet())

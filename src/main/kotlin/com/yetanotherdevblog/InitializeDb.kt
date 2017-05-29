@@ -1,25 +1,37 @@
 package com.yetanotherdevblog
 
+import com.yetanotherdevblog.petclinic.model.Owner
+import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.model.PetType
 import com.yetanotherdevblog.petclinic.model.Speciality
 import com.yetanotherdevblog.petclinic.model.Vet
+import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
+import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
 import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
 import com.yetanotherdevblog.petclinic.repositories.VetRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import java.time.LocalDate
+import java.util.Date
+import java.util.UUID
 
 @Component
 class InitializeDb(val petTypeRepository: PetTypeRepository,
                    val specialityRepository: SpecialityRepository,
-                   val vetRepository: VetRepository): CommandLineRunner {
+                   val vetRepository: VetRepository,
+                   val ownersRepository: OwnersRepository,
+                   val petRepository: PetRepository): CommandLineRunner {
 
     override fun run(vararg args: String?) {
 
+        val ownerId = UUID.fromString("5bead0d3-cd7b-41e5-b064-09f48e5e6a08").toString()
+        val dogId = UUID.randomUUID().toString()
+
         petTypeRepository.deleteAll().subscribe(null, null, {
-            val petTypes = listOf("cat", "dog", "lizard", "snake", "bird", "hamster")
-                    .map { PetType(name = it) }
+            val petTypes = listOf("cat", "lizard", "snake", "bird", "hamster", "dog")
+                    .map { if (it == "dog") PetType(name=it, id = dogId) else PetType(name = it) }
             petTypeRepository.saveAll(petTypes).subscribe( null, null, { println("Added  PetTypes") })
         })
 
@@ -42,6 +54,21 @@ class InitializeDb(val petTypeRepository: PetTypeRepository,
 
         })
 
+        ownersRepository.deleteAll().subscribe(null, null, {
+            ownersRepository.saveAll(listOf(
+                    Owner(firstName = "James", lastName="Carter",
+                            telephone = "123", address = "123", city = "asd",
+                            id = ownerId)))
+                    .subscribe( null, null, { println("Added  Owners") })
+
+        })
+
+
+        petRepository.deleteAll().subscribe(null, null, {
+            petRepository.saveAll(listOf(Pet(name = "Some name", birthDate = LocalDate.now(), type = dogId, owner = ownerId)))
+                    .subscribe( null, null, { println("Added Pets") })
+
+        })
 
 
     }
