@@ -24,31 +24,27 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
 
     fun goToOwnersIndex(serverRequest: ServerRequest) = goToOwnersIndex()
 
-    fun goToOwnersIndex(): Mono<ServerResponse> {
-        return ok().html().render("owners/index",
+    fun goToOwnersIndex() = ok().html().render("owners/index",
                 mapOf("owners" to ownersRepository.findAll().map { Pair(it, emptySet<Pet>()) },
                         "pets" to petRepository.findAll().collectMultimap { it.owner }))
-    }
 
-    fun goToAddPage(serverRequest: ServerRequest) =
-            ok().html().render("owners/add")
+    fun goToAddPage(serverRequest: ServerRequest) = ok().html().render("owners/add")
 
     fun goToEditPage(serverRequest: ServerRequest) =
             serverRequest.queryParam("id")
                     .map { ownersRepository.findById(it) }
                     .orElse(Mono.empty<Owner>())
                     .map { mapOf("id" to it.id,
-                                "firstName" to it.firstName,
-                                "lastName" to it.lastName,
-                                "address" to it.address,
-                                "city" to it.city,
-                                "telephone" to it.telephone)
-                    }.flatMap { ok().html().render("owners/edit", it) }
+                          "firstName" to it.firstName,
+                           "lastName" to it.lastName,
+                            "address" to it.address,
+                               "city" to it.city,
+                          "telephone" to it.telephone)
+                    }
+                    .flatMap { ok().html().render("owners/edit", it) }
 
-    fun view(serverRequest: ServerRequest) : Mono<ServerResponse> {
-        return serverRequest.queryParam("id")
-                .map { ownersRepository.findById(it) }
-                .orElse(Mono.empty<Owner>())
+    fun view(serverRequest: ServerRequest) =
+            serverRequest.queryParam("id").map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
                 .flatMap { owner ->
                     val model = mapOf<String, Any>(
                             "owner" to owner,
@@ -58,10 +54,9 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                     ok().html().render("owners/view", model)
                 }
                 .switchIfEmpty(ServerResponse.notFound().build())
-    }
 
-    fun add(serverRequest: ServerRequest) : Mono<ServerResponse> {
-        return serverRequest.body(BodyExtractors.toFormData()).flatMap {
+    fun add(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
+            .flatMap {
                 val formData = it.toSingleValueMap()
                 ownersRepository.save(Owner(
                                id = formData["id"] ?: UUID.randomUUID().toString(),
@@ -69,18 +64,14 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                          lastName = formData["lastName"]!!,
                           address = formData["address"]!!,
                         telephone = formData["telephone"]!!,
-                             city = formData["city"]!!
-                ))
-        }.then(goToOwnersIndex())
-    }
+                             city = formData["city"]!!))
+            }
+            .then(goToOwnersIndex())
 
-    fun edit(serverRequest: ServerRequest) : Mono<ServerResponse> {
-        val owner: Mono<Owner> = serverRequest.queryParam("id")
-                .map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
-        return owner
+    fun edit(serverRequest: ServerRequest) =
+            serverRequest.queryParam("id").map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
                 .flatMap { ownersRepository.save(it) }
                 .flatMap { ok().render("owners/edit", it) }
-    }
 
 }
 

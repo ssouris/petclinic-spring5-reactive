@@ -9,9 +9,7 @@ import com.yetanotherdevblog.petclinic.toDate
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
-import reactor.core.publisher.Mono
 
 @Component
 class PetsHandler(val petRepository: PetRepository,
@@ -19,47 +17,41 @@ class PetsHandler(val petRepository: PetRepository,
                   val petTypeRepository: PetTypeRepository,
                   val ownersHandler: OwnersHandler) {
 
-    fun goToAdd(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return ok().html()
-                .render("pets/add", mapOf(
+    fun goToAdd(serverRequest: ServerRequest) =
+            ok().html().render("pets/add", mapOf(
                         "owner" to ownersRepository.findById(
-                                    serverRequest.queryParam("ownerId").orElseThrow({IllegalArgumentException()})),
-                        "petTypes" to petTypeRepository.findAll()
-                ))
-    }
+                                serverRequest.queryParam("ownerId").orElseThrow({IllegalArgumentException()})),
+                     "petTypes" to petTypeRepository.findAll()))
 
-    fun add(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return serverRequest.body(BodyExtractors.toFormData()).flatMap {
-            val formData = it.toSingleValueMap()
-            petRepository.save(Pet(
-                         name = formData["name"]!!,
-                    birthDate = formData["birthDate"]!!.toDate(),
-                        owner = formData["ownerId"]!!,
-                         type = formData["typeId"]!!))
-        }.then(ownersHandler.goToOwnersIndex())
-    }
+    fun add(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
+            .flatMap {
+                val formData = it.toSingleValueMap()
+                petRepository.save(Pet(
+                                 name = formData["name"]!!,
+                            birthDate = formData["birthDate"]!!.toDate(),
+                                owner = formData["ownerId"]!!,
+                                 type = formData["typeId"]!!))
+            }
+            .then(ownersHandler.goToOwnersIndex())
 
-    fun goToEdit(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return petRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()})).map {
-            mapOf("pet" to it,
-                  "petTypes" to petTypeRepository.findAll(),
-                  "owner" to ownersRepository.findById(it.owner))
-        }.flatMap { ok().html().render("pets/edit", it) }
-    }
+    fun goToEdit(serverRequest: ServerRequest) =
+            petRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()}))
+                    .map { mapOf("pet" to it,
+                          "petTypes" to petTypeRepository.findAll(),
+                          "owner" to ownersRepository.findById(it.owner))
+                    }
+                    .flatMap { ok().html().render("pets/edit", it) }
 
-    fun edit(serverRequest: ServerRequest): Mono<ServerResponse> {
-        return serverRequest.body(BodyExtractors.toFormData()).flatMap {
-            val formData = it.toSingleValueMap()
-            petRepository.save(Pet(
+    fun edit(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
+            .flatMap {
+                val formData = it.toSingleValueMap()
+                petRepository.save(Pet(
                            id = formData["id"]!!,
                          name = formData["name"]!!,
                     birthDate = formData["birthDate"]!!.toDate(),
                         owner = formData["ownerId"]!!,
-                         type = formData["type"]!!
-
-            ))
-        }.then(ownersHandler.goToOwnersIndex())
-    }
+                         type = formData["type"]!!))
+            }
+            .then(ownersHandler.goToOwnersIndex())
 
 }
-

@@ -9,6 +9,4 @@ import reactor.core.publisher.Flux
 
     fun findAllByOwner(id: String): Flux<Pet>
 
-    fun findAllByOwner(ownerIds: Iterable<String>): Flux<Pet>
-
 }

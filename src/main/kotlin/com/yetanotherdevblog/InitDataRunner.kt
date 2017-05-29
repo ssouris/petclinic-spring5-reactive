@@ -63,7 +63,6 @@ class InitDataRunner(val petTypeRepository: PetTypeRepository,
 
         })
 
-
         petRepository.deleteAll().subscribe(null, null, {
             petRepository.saveAll(listOf(Pet(
                     name = "Some name",
@@ -74,8 +73,6 @@ class InitDataRunner(val petTypeRepository: PetTypeRepository,
 
         })
 
-
     }
-
 
 }
