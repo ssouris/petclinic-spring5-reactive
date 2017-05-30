@@ -1,5 +1,5 @@
 # PetClinic (Spring 5/Reactive)
-[![Build Status](https://travis-ci.org/ssouris/spring5-reactive-sample.svg)](https://travis-ci.org/ssouris/spring5-reactive-sample)
+[![Build Status](https://travis-ci.org/ssouris/petclinic-spring5-reactive.svg)](https://travis-ci.org/ssouris/petclinic-spring5-reactive)
 
 This is a rewrite of PetClinic using Kotlin, Spring 5 and its reactive APIs (Flux, Mono).
 
