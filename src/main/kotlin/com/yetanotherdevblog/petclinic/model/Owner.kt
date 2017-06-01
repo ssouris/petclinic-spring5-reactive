@@ -9,6 +9,5 @@ data class Owner(@Id val id:String,
                  val lastName: String,
                  val address: String,
                  val city: String,
-                 val telephone: String,
-                 val pets: Set<Pet> = HashSet())
+                 val telephone: String)
 

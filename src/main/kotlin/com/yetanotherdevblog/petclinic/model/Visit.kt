@@ -7,6 +7,6 @@ import java.time.LocalDate
 @Document
 data class Visit(
         @Id val id:String,
-        val visitDate: java.time.LocalDate,
+        val visitDate: LocalDate,
         val description: String,
         val petId: String)

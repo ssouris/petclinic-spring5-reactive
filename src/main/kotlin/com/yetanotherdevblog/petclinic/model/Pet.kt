@@ -13,5 +13,4 @@ data class Pet(
         val name: String,
         val birthDate: LocalDate,
         val type: String,
-        val owner: String,
-        val visits : Set<Visit> = emptySet())
+        val owner: String)
