@@ -45,12 +45,14 @@ class VisitHandler(val visitRepository: VisitRepository,
             visitRepository.findById(
                     serverRequest.queryParam("id").orElseThrow({ IllegalArgumentException() }))
                 .and { petRepository.findById(it.petId) }
-                .map { mapOf(
-                        Pair("id", it.t1.id),
-                        Pair("date", it.t1.visitDate.toStr()),
-                        Pair("description", it.t1.description),
-                        Pair("pet", it.t2),
-                        Pair("owner", ownersRepository.findById(it.t2.owner)))
+                .map {
+                    val (visit, pet) = Pair(it.t1, it.t2)
+                    mapOf(
+                        Pair("id", visit.id),
+                        Pair("date", visit.visitDate.toStr()),
+                        Pair("description", visit.description),
+                        Pair("pet", pet),
+                        Pair("owner", ownersRepository.findById(pet.owner)))
                 }
                 .flatMap { ok().html().render("visits/edit", it) }
 

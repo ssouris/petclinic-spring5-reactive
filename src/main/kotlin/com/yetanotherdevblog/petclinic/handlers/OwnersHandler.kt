@@ -45,12 +45,14 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
 
     fun view(serverRequest: ServerRequest) =
             serverRequest.queryParam("id").map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
-                .flatMap { owner ->
+                    .and({ (id) -> petRepository.findAllByOwner(id).collectList() })
+                .flatMap { ownerAndPets ->
+                    val (owner, pets) = Pair(ownerAndPets.t1, ownerAndPets.t2)
                     val model = mapOf<String, Any>(
                             "owner" to owner,
-                            "pets" to petRepository.findAllByOwner(owner.id),
+                            "pets" to pets,
                             "petTypes" to petTypeRepository.findAll().collectMap({ it.id }, {it.name}),
-                            "petVisits" to visitRepository.findAll().collectMultimap { it.petId })
+                            "petVisits" to visitRepository.findAllByPetId( pets.map { it.id }).collectMultimap { it.petId })
                     ok().html().render("owners/view", model)
                 }
                 .switchIfEmpty(ServerResponse.notFound().build())
@@ -74,5 +76,3 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                 .flatMap { ok().render("owners/edit", it) }
 
 }
-
-

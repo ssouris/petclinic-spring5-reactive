@@ -7,10 +7,17 @@ import com.yetanotherdevblog.petclinic.handlers.PetsHandler
 import com.yetanotherdevblog.petclinic.handlers.SpecialitiesHandler
 import com.yetanotherdevblog.petclinic.handlers.VetsHandler
 import com.yetanotherdevblog.petclinic.handlers.VisitHandler
+import com.yetanotherdevblog.petclinic.model.Owner
+import com.yetanotherdevblog.petclinic.model.Pet
+import com.yetanotherdevblog.petclinic.model.Visit
+import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
+import com.yetanotherdevblog.petclinic.repositories.PetRepository
+import com.yetanotherdevblog.petclinic.repositories.VisitRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.DependsOn
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.TEXT_EVENT_STREAM
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
@@ -38,6 +45,23 @@ class PetClinicRoutes() {
         }
         GET("/test", { ok().body(Mono.just("test"), String::class.java) })
         accept(TEXT_EVENT_STREAM).nest { GET("/match", blogHandler::matchClock) }
+    }
+
+    @Bean
+    fun apiRouter(ownersRepository: OwnersRepository,
+                  petRepository: PetRepository,
+                  visitRepository: VisitRepository) = router {
+        (accept(MediaType.APPLICATION_JSON) and "/api").nest {
+            "/owners".nest {
+                GET("/", { ok().body(ownersRepository.findAll(), Owner::class.java) })
+                GET("/{id}", { ok().body(ownersRepository.findById(it.pathVariable("id")), Owner::class.java) })
+            }
+            "/pets".nest {
+                GET("/", { ok().body(petRepository.findAll(), Pet::class.java) })
+                GET("/{id}", { ok().body(petRepository.findById(it.pathVariable("id")), Pet::class.java) })
+                GET("/{id}/visits", { ok().body(visitRepository.findByPetId(it.pathVariable("id")), Visit::class.java) })
+            }
+        }
     }
 
     @Bean
