@@ -14,6 +14,8 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.core.publisher.Mono
+import reactor.util.function.component1
+import reactor.util.function.component2
 import java.util.UUID
 
 @Component
@@ -46,8 +48,7 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
     fun view(serverRequest: ServerRequest) =
             serverRequest.queryParam("id").map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
                     .and({ (id) -> petRepository.findAllByOwner(id).collectList() })
-                .flatMap { ownerAndPets ->
-                    val (owner, pets) = Pair(ownerAndPets.t1, ownerAndPets.t2)
+                .flatMap { (owner, pets) ->
                     val model = mapOf<String, Any>(
                             "owner" to owner,
                             "pets" to pets,
