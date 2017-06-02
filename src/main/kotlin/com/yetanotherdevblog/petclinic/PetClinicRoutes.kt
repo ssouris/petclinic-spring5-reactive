@@ -1,6 +1,5 @@
 package com.yetanotherdevblog.petclinic
 
-import com.yetanotherdevblog.experimental.MyBlogPostHandler
 import com.yetanotherdevblog.petclinic.handlers.OwnersHandler
 import com.yetanotherdevblog.petclinic.handlers.PetTypeHandler
 import com.yetanotherdevblog.petclinic.handlers.PetsHandler
@@ -33,19 +32,6 @@ class PetClinicRoutes() {
     @Bean
     @DependsOn("petClinicRouter")
     fun resourceRouter() = resources("/**", ClassPathResource("static/"))
-
-    @Bean
-    fun simpleRouter(blogHandler: MyBlogPostHandler) = router {
-        "/posts".nest {
-            GET("/{id}", blogHandler::getBlogPost)
-            GET("/", blogHandler::getBlogPosts)
-            (accept(APPLICATION_JSON) and (contentType(APPLICATION_JSON) or contentType(APPLICATION_JSON_UTF8))).nest {
-                POST("/", blogHandler::save)
-            }
-        }
-        GET("/test", { ok().body(Mono.just("test"), String::class.java) })
-        accept(TEXT_EVENT_STREAM).nest { GET("/match", blogHandler::matchClock) }
-    }
 
     @Bean
     fun apiRouter(ownersRepository: OwnersRepository,

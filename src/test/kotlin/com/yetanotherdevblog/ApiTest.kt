@@ -34,7 +34,7 @@ class ApiTest {
     }
 
     @Test
-    fun pets() {
+    fun `API call for Pets`() {
         val petsCount = petRepository.count().block(Duration.ofSeconds(2))
         client.get().uri("/api/pets").accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -44,7 +44,7 @@ class ApiTest {
     }
 
     @Test
-    fun owners() {
+    fun `API call for Owners`() {
         client.get().uri("/api/owners").accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Owner::class.java)

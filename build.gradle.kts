@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+version = "1.0.0-SNAPSHOT"
+
 buildscript {
     repositories {
         mavenCentral()
@@ -13,7 +15,6 @@ buildscript {
 
 plugins {
     val kotlinVersion = "1.1.2"
-    val nodePluginVersion = "1.1.1"
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.noarg") version kotlinVersion
@@ -23,8 +24,6 @@ plugins {
 apply {
     plugin("org.springframework.boot")
 }
-
-version = "1.0.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
