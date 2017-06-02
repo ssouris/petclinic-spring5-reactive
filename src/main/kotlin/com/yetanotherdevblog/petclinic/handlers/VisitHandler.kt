@@ -5,7 +5,7 @@ import com.yetanotherdevblog.petclinic.model.Visit
 import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.VisitRepository
-import com.yetanotherdevblog.petclinic.toDate
+import com.yetanotherdevblog.petclinic.toLocalDate
 import com.yetanotherdevblog.petclinic.toStr
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
@@ -36,7 +36,7 @@ class VisitHandler(val visitRepository: VisitRepository,
                                 id = UUID.randomUUID().toString(),
                                 description = formData["description"]!!,
                                 petId =  formData["petId"]!!,
-                                visitDate = formData["date"]!!.toDate()))
+                                visitDate = formData["date"]!!.toLocalDate()))
                     }
                     .then(ownersHandler.goToOwnersIndex())
 
@@ -63,7 +63,7 @@ class VisitHandler(val visitRepository: VisitRepository,
                         val formData = it.toSingleValueMap()
                         visitRepository.save(Visit(
                                 id = formData["id"]!!,
-                                visitDate = formData["date"]!!.toDate(),
+                                visitDate = formData["date"]!!.toLocalDate(),
                                 petId = formData["petId"]!!,
                                 description = formData["description"]!!))
                     }

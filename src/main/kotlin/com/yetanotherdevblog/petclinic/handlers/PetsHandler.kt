@@ -5,7 +5,7 @@ import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
-import com.yetanotherdevblog.petclinic.toDate
+import com.yetanotherdevblog.petclinic.toLocalDate
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -28,7 +28,7 @@ class PetsHandler(val petRepository: PetRepository,
                 val formData = it.toSingleValueMap()
                 petRepository.save(Pet(
                                  name = formData["name"]!!,
-                            birthDate = formData["birthDate"]!!.toDate(),
+                            birthDate = formData["birthDate"]!!.toLocalDate(),
                                 owner = formData["ownerId"]!!,
                                  type = formData["typeId"]!!))
             }
@@ -48,7 +48,7 @@ class PetsHandler(val petRepository: PetRepository,
                 petRepository.save(Pet(
                            id = formData["id"]!!,
                          name = formData["name"]!!,
-                    birthDate = formData["birthDate"]!!.toDate(),
+                    birthDate = formData["birthDate"]!!.toLocalDate(),
                         owner = formData["ownerId"]!!,
                          type = formData["type"]!!))
             }

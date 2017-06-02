@@ -21,4 +21,4 @@ fun ServerResponse.BodyBuilder.html() = contentType(TEXT_HTML)
 
 fun LocalDate.toStr(format:String = "dd/MM/yyyy") = DateTimeFormatter.ofPattern(format).format(this)
 
-fun String.toDate() = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+fun String.toLocalDate(format:String = "dd/MM/yyyy") = LocalDate.parse(this, DateTimeFormatter.ofPattern(format))
