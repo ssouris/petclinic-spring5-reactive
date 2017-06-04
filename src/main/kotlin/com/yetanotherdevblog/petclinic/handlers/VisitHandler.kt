@@ -19,7 +19,7 @@ class VisitHandler(val visitRepository: VisitRepository,
                    val ownersRepository: OwnersRepository,
                    val ownersHandler: OwnersHandler) {
 
-    fun goToAdd(serverRequest: ServerRequest) =
+    fun addPage(serverRequest: ServerRequest) =
             petRepository.findById(
                     serverRequest.queryParam("petId").orElseThrow { IllegalArgumentException() })
                 .flatMap { pet ->
@@ -38,10 +38,10 @@ class VisitHandler(val visitRepository: VisitRepository,
                                 petId =  formData["petId"]!!,
                                 visitDate = formData["date"]!!.toLocalDate()))
                     }
-                    .then(ownersHandler.goToOwnersIndex())
+                    .then(ownersHandler.indexPage())
 
 
-    fun goToEdit(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             visitRepository.findById(
                     serverRequest.queryParam("id").orElseThrow({ IllegalArgumentException() }))
                 .and { petRepository.findById(it.petId) }
@@ -67,6 +67,6 @@ class VisitHandler(val visitRepository: VisitRepository,
                                 petId = formData["petId"]!!,
                                 description = formData["description"]!!))
                     }
-                    .then(ownersHandler.goToOwnersIndex())
+                    .then(ownersHandler.indexPage())
 
 }

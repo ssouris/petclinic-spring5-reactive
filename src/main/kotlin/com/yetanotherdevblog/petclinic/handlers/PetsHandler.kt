@@ -17,7 +17,7 @@ class PetsHandler(val petRepository: PetRepository,
                   val petTypeRepository: PetTypeRepository,
                   val ownersHandler: OwnersHandler) {
 
-    fun goToAdd(serverRequest: ServerRequest) =
+    fun addPage(serverRequest: ServerRequest) =
             ok().html().render("pets/add", mapOf(
                         "owner" to ownersRepository.findById(
                                 serverRequest.queryParam("ownerId").orElseThrow({IllegalArgumentException()})),
@@ -32,9 +32,9 @@ class PetsHandler(val petRepository: PetRepository,
                                 owner = formData["ownerId"]!!,
                                  type = formData["typeId"]!!))
             }
-            .then(ownersHandler.goToOwnersIndex())
+            .then(ownersHandler.indexPage())
 
-    fun goToEdit(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             petRepository.findById(serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()}))
                     .map { mapOf("pet" to it,
                           "petTypes" to petTypeRepository.findAll(),
@@ -52,6 +52,6 @@ class PetsHandler(val petRepository: PetRepository,
                         owner = formData["ownerId"]!!,
                          type = formData["type"]!!))
             }
-            .then(ownersHandler.goToOwnersIndex())
+            .then(ownersHandler.indexPage())
 
 }

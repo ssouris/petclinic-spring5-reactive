@@ -12,9 +12,9 @@ import java.util.UUID
 @Component
 class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
 
-    fun goToSpecialitiesIndex(serverRequest: ServerRequest) = goToIndex()
+    fun indexPage(serverRequest: ServerRequest) = indexPage()
 
-    fun goToAdd(serverRequest: ServerRequest) = ok().html().render("specialities/add")
+    fun addPage(serverRequest: ServerRequest) = ok().html().render("specialities/add")
 
     fun add(serverRequest: ServerRequest) =
             serverRequest.body(BodyExtractors.toFormData())
@@ -23,9 +23,9 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
                         specialityRepository.save(Speciality(
                                 id = UUID.randomUUID().toString(), name = formData["name"]!!))
                     }
-                    .then(goToIndex())
+                    .then(indexPage())
 
-    fun goToEdit(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             specialityRepository.findById(
                     serverRequest.queryParam("id").orElseThrow {IllegalArgumentException()})
                     .map { mapOf("id" to it.id, "name" to it.name) }
@@ -39,9 +39,9 @@ class SpecialitiesHandler(val specialityRepository: SpecialityRepository) {
                                 id = formData["id"]!!,
                                 name = formData["name"]!!))
                     }
-                    .then(goToIndex())
+                    .then(indexPage())
 
-    fun goToIndex() = ok().html().render("specialities/index",
+    fun indexPage() = ok().html().render("specialities/index",
             mapOf("specialities" to specialityRepository.findAll()))
 
 }

@@ -14,9 +14,9 @@ import java.util.UUID
 class VetsHandler(val vetRepository: VetRepository,
                   val specialityRepository: SpecialityRepository) {
 
-    fun goToVetsIndex(serverRequest: ServerRequest) = goToIndex()
+    fun indexPage(serverRequest: ServerRequest) = indexPage()
 
-    fun goToAdd(serverRequest: ServerRequest) =
+    fun addPage(serverRequest: ServerRequest) =
             ok().html().render("vets/add", mapOf("specialities" to specialityRepository.findAll()))
 
     fun add(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
@@ -28,9 +28,9 @@ class VetsHandler(val vetRepository: VetRepository,
                         lastName = formData["lastName"]?.get(0)!!,
                         specialities = formData["specialities"]?.toCollection(HashSet())!!))
             }
-            .then(goToIndex())
+            .then(indexPage())
 
-    fun goToEdit(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             vetRepository.findById(
                     serverRequest.queryParam("id").orElseThrow({IllegalArgumentException()}))
             .map { mapOf("vet" to it, "specialities" to specialityRepository.findAll()) }
@@ -44,8 +44,8 @@ class VetsHandler(val vetRepository: VetRepository,
                         lastName = formData["lastName"]?.get(0)!!,
                         specialities = formData["specialities"]?.toCollection(HashSet<String>())!!))
             }
-            .then(goToIndex())
+            .then(indexPage())
 
-    fun goToIndex() = ok().html().render("vets/index", mapOf("vets" to vetRepository.findAll()))
+    fun indexPage() = ok().html().render("vets/index", mapOf("vets" to vetRepository.findAll()))
 
 }

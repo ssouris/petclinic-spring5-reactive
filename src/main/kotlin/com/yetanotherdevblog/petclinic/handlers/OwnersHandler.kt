@@ -24,15 +24,11 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                     val petTypeRepository: PetTypeRepository,
                     val visitRepository: VisitRepository) {
 
-    fun goToOwnersIndex(serverRequest: ServerRequest) = goToOwnersIndex()
+    fun indexPage(serverRequest: ServerRequest) = indexPage()
 
-    fun goToOwnersIndex() = ok().html().render("owners/index",
-                mapOf("owners" to ownersRepository.findAll().map { Pair(it, emptySet<Pet>()) },
-                        "pets" to petRepository.findAll().collectMultimap { it.owner }))
+    fun addPage(serverRequest: ServerRequest) = ok().html().render("owners/add")
 
-    fun goToAddPage(serverRequest: ServerRequest) = ok().html().render("owners/add")
-
-    fun goToEditPage(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             serverRequest.queryParam("id")
                     .map { ownersRepository.findById(it) }
                     .orElse(Mono.empty<Owner>())
@@ -69,11 +65,15 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                         telephone = formData["telephone"]!!,
                              city = formData["city"]!!))
             }
-            .then(goToOwnersIndex())
+            .then(indexPage())
 
     fun edit(serverRequest: ServerRequest) =
             serverRequest.queryParam("id").map { ownersRepository.findById(it) }.orElse(Mono.empty<Owner>())
                 .flatMap { ownersRepository.save(it) }
                 .flatMap { ok().render("owners/edit", it) }
+
+    fun indexPage() = ok().html().render("owners/index",
+            mapOf("owners" to ownersRepository.findAll().map { Pair(it, emptySet<Pet>()) },
+                    "pets" to petRepository.findAll().collectMultimap { it.owner }))
 
 }

@@ -12,18 +12,19 @@ import org.springframework.web.reactive.function.server.ServerResponse.ok
 @Component
 class PetTypeHandler(val petTypeRepository: PetTypeRepository) {
 
-    fun goToPetTypeIndex(serverRequest: ServerRequest) = goToIndex()
+    fun indexPage(serverRequest: ServerRequest) = indexPage()
 
-    fun goToAdd(serverRequest: ServerRequest) = ok().contentType(MediaType.TEXT_HTML).render("petTypes/add")
+    fun addPage(serverRequest: ServerRequest) =
+            ok().contentType(MediaType.TEXT_HTML).render("petTypes/add")
 
     fun add(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
             .flatMap {
                 val formData = it.toSingleValueMap()
                 petTypeRepository.save(PetType(name = formData["name"]!!))
             }
-            .then(goToIndex())
+            .then(indexPage())
 
-    fun goToEdit(serverRequest: ServerRequest) =
+    fun editPage(serverRequest: ServerRequest) =
             petTypeRepository.findById(serverRequest.queryParam("id").orElseThrow{ IllegalArgumentException() })
                     .map { mapOf("id" to it.id, "name" to it.name) }
                     .flatMap { ok().html().render("petTypes/edit", it) }
@@ -34,8 +35,8 @@ class PetTypeHandler(val petTypeRepository: PetTypeRepository) {
                         val formData = it.toSingleValueMap()
                         petTypeRepository.save(PetType(id = formData["id"]!!, name = formData["name"]!!))
                     }
-                    .then(goToIndex())
+                    .then(indexPage())
 
-    fun goToIndex() = ok().html().render("petTypes/index", mapOf("petTypes" to petTypeRepository.findAll()))
+    fun indexPage() = ok().html().render("petTypes/index", mapOf("petTypes" to petTypeRepository.findAll()))
 
 }
