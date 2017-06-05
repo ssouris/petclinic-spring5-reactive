@@ -18,7 +18,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.spring") version kotlinVersion
     id("org.jetbrains.kotlin.plugin.noarg") version kotlinVersion
-    id("io.spring.dependency-management") version "1.0.2.RELEASE"
+    id("io.spring.dependency-management") version "1.0.3.RELEASE"
 }
 
 apply {
