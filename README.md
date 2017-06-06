@@ -1,11 +1,8 @@
-# PetClinic (Spring 5/Reactive)
+# PetClinic (Kotlin/Spring 5/Reactive)
 [![Build Status](https://travis-ci.org/ssouris/petclinic-spring5-reactive.svg)](https://travis-ci.org/ssouris/petclinic-spring5-reactive)
 
+### Description
 This is a rewrite of PetClinic using Kotlin, Spring 5 and its reactive APIs (Flux, Mono).
-
-## Software design
- - Reactive and non-blocking
- - Leverage Kotlin features like [Kotlin extensions] and [reified type parameters] for cleaner code
 
 ### Technologies used
 
@@ -25,10 +22,10 @@ This is a rewrite of PetClinic using Kotlin, Spring 5 and its reactive APIs (Flu
 ### Package and run the application from the executable JAR:
 ```
 ./gradlew clean build
-java -jar build/libs/......-1.0.0-SNAPSHOT.jar
+java -jar build/libs/petclinic-spring5-kotlin-1.0.0-SNAPSHOT.jar
 ```
 
-## TODO
+### TODO
 
  - Validation on save/edit
  - Error handling (what happens when an entity is not present in the db)
