@@ -5,9 +5,14 @@ import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
 
 import com.yetanotherdevblog.petclinic.model.Owner
 import com.yetanotherdevblog.petclinic.model.Pet
+import com.yetanotherdevblog.petclinic.model.Visit
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
 import com.yetanotherdevblog.petclinic.repositories.VisitRepository
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Criteria.*
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyExtractors
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -22,7 +27,7 @@ import java.util.UUID
 class OwnersHandler(val ownersRepository: OwnersRepository,
                     val petRepository: PetRepository,
                     val petTypeRepository: PetTypeRepository,
-                    val visitRepository: VisitRepository) {
+                    val mongoTemplate: ReactiveMongoTemplate) {
 
     fun indexPage(serverRequest: ServerRequest) = indexPage()
 
@@ -49,10 +54,14 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                             "owner" to owner,
                             "pets" to pets,
                             "petTypes" to petTypeRepository.findAll().collectMap({ it.id }, {it.name}),
-                            "petVisits" to visitRepository.findAllByPetId( pets.map { it.id }).collectMultimap { it.petId })
+                            "petVisits" to petVisits(pets.map { it.id }))
                     ok().html().render("owners/view", model)
                 }
                 .switchIfEmpty(ServerResponse.notFound().build())
+
+    fun petVisits(petIds: List<String>) =
+            mongoTemplate.find(Query(where("petId").`in`(petIds) ), Visit::class.java)
+                    .collectMultimap { it.petId }
 
     fun add(serverRequest: ServerRequest) = serverRequest.body(BodyExtractors.toFormData())
             .flatMap {
