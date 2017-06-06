@@ -1,39 +1,36 @@
 package com.yetanotherdevblog
 
-import com.yetanotherdevblog.petclinic.model.Owner
-import com.yetanotherdevblog.petclinic.model.Pet
-import com.yetanotherdevblog.petclinic.model.PetType
-import com.yetanotherdevblog.petclinic.model.Speciality
-import com.yetanotherdevblog.petclinic.model.Vet
-import com.yetanotherdevblog.petclinic.repositories.OwnersRepository
-import com.yetanotherdevblog.petclinic.repositories.PetRepository
-import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
-import com.yetanotherdevblog.petclinic.repositories.SpecialityRepository
-import com.yetanotherdevblog.petclinic.repositories.VetRepository
+import com.yetanotherdevblog.petclinic.model.*
+import com.yetanotherdevblog.petclinic.repositories.*
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import reactor.core.Disposable
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 @Component
 class DbInitializer(val petTypeRepository: PetTypeRepository,
                     val specialityRepository: SpecialityRepository,
                     val vetRepository: VetRepository,
                     val ownersRepository: OwnersRepository,
-                    val petRepository: PetRepository): CommandLineRunner {
+                    val petRepository: PetRepository,
+                    val visitRepository: VisitRepository): CommandLineRunner {
 
     override fun run(vararg args: String?) {
 
         val ownerId = UUID.fromString("5bead0d3-cd7b-41e5-b064-09f48e5e6a08").toString()
+        val petId = UUID.fromString("6bead0d3-cd7b-41e5-b064-09f48e5e6a08").toString()
+        val secondPetId = UUID.fromString("6bead0d2-cd7b-41e5-b064-09f48e5e6a08").toString()
+        val thirdPetId = UUID.fromString("6bead0a3-cd7b-41e5-b064-09f48e5e6a08").toString()
         val dogId = UUID.randomUUID().toString()
 
         petTypeRepository.deleteAll().subscribeOnComplete {
             val petTypes = listOf("cat", "lizard", "snake", "bird", "hamster", "dog")
                     .map { if (it == "dog") PetType(name=it, id = dogId) else PetType(name = it) }
             petTypeRepository.saveAll(petTypes)
-                    .subscribe( null, null, { println("Added  PetTypes") })
+                    .subscribeOnComplete { println("Added  PetTypes") }
         }
 
 
@@ -41,7 +38,7 @@ class DbInitializer(val petTypeRepository: PetTypeRepository,
             val specialities = listOf("radiology", "dentistry", "surgery")
                     .map {Speciality(name = it)}
             specialityRepository.saveAll(specialities)
-                    .subscribe( null, null, { println("Added  Specialities") })
+                    .subscribeOnComplete { println("Added  Specialities") }
         }
 
         vetRepository.deleteAll().subscribeOnComplete {
@@ -52,24 +49,33 @@ class DbInitializer(val petTypeRepository: PetTypeRepository,
                     Vet(firstName = "Rafael", lastName="Ortega", specialities = setOf("surgery")),
                     Vet(firstName = "Henry", lastName="Stevens", specialities = setOf("radiology")),
                     Vet(firstName = "Sharon", lastName="Jenkins")))
-                    .subscribe( null, null, { println("Added  Vets") })
+                    .subscribeOnComplete { println("Added  Vets") }
         }
 
         ownersRepository.deleteAll().subscribeOnComplete {
             ownersRepository.saveAll(listOf(
-                    Owner(firstName = "James", lastName="Carter",
-                            telephone = "123", address = "123", city = "asd",
+                    Owner(firstName = "James", lastName="Owner",
+                            telephone = "+44 4444444", address = "Road St",
+                            city = "Serverless",
                             id = ownerId)))
-                    .subscribe( null, null, { println("Added  Owners") })
+                    .subscribeOnComplete { println("Added  Owners") }
         }
 
         petRepository.deleteAll().subscribeOnComplete {
-            petRepository.saveAll(listOf(Pet(
-                    name = "Some name",
-                    birthDate = LocalDate.now(),
-                    type = dogId,
-                    owner = ownerId)))
-                    .subscribe( null, null, { println("Added Pets") })
+            petRepository.saveAll(listOf(
+                    Pet(id = petId, name = "Pet 1", birthDate = LocalDate.now(), type = dogId, owner = ownerId),
+                    Pet(id = secondPetId, name = "Pet 2", birthDate = LocalDate.now(), type = dogId, owner = ownerId),
+                    Pet(id = thirdPetId, name = "Pet 3", birthDate = LocalDate.now(), type = dogId, owner = ownerId)))
+                    .subscribeOnComplete { println("Added Pets") }
+        }
+
+        visitRepository.deleteAll().subscribeOnComplete {
+            visitRepository.saveAll(listOf(
+                    Visit(visitDate= LocalDate.now(), description = "Visit description ${Random().nextInt()}", petId= petId),
+                    Visit(visitDate= LocalDate.now(), description = "Visit description ${Random().nextInt()}", petId= petId),
+                    Visit(visitDate= LocalDate.now(), description = "Visit description ${Random().nextInt()}", petId= petId),
+                    Visit(visitDate= LocalDate.now(), description = "Visit description ${Random().nextInt()}", petId= secondPetId)))
+                    .subscribeOnComplete { println("Added Visits") }
         }
 
     }
@@ -81,4 +87,9 @@ class DbInitializer(val petTypeRepository: PetTypeRepository,
         return this.subscribe(null, null, completeConsumer)
     }
 
+    private fun <T> Flux<T>.subscribeOnComplete(completeConsumer: () -> Unit) : Disposable {
+        return this.subscribe(null, null, completeConsumer)
+    }
 }
+
+
