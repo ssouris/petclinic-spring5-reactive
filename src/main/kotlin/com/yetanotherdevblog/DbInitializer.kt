@@ -18,11 +18,11 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Component
-class InitDataRunner(val petTypeRepository: PetTypeRepository,
-                     val specialityRepository: SpecialityRepository,
-                     val vetRepository: VetRepository,
-                     val ownersRepository: OwnersRepository,
-                     val petRepository: PetRepository): CommandLineRunner {
+class DbInitializer(val petTypeRepository: PetTypeRepository,
+                    val specialityRepository: SpecialityRepository,
+                    val vetRepository: VetRepository,
+                    val ownersRepository: OwnersRepository,
+                    val petRepository: PetRepository): CommandLineRunner {
 
     override fun run(vararg args: String?) {
 
