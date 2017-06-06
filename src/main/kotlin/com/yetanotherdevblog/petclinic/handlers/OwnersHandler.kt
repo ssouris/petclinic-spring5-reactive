@@ -8,7 +8,6 @@ import com.yetanotherdevblog.petclinic.model.Pet
 import com.yetanotherdevblog.petclinic.model.Visit
 import com.yetanotherdevblog.petclinic.repositories.PetRepository
 import com.yetanotherdevblog.petclinic.repositories.PetTypeRepository
-import com.yetanotherdevblog.petclinic.repositories.VisitRepository
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Criteria.*
@@ -29,7 +28,10 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                     val petTypeRepository: PetTypeRepository,
                     val mongoTemplate: ReactiveMongoTemplate) {
 
-    fun indexPage(serverRequest: ServerRequest) = indexPage()
+    fun indexPage(serverRequest: ServerRequest) =
+            serverRequest.queryParam("q").filter { it.trim().isNotEmpty() }
+                    .map { indexPageWithQuery(it) }
+                    .orElse(indexPage())
 
     fun addPage(serverRequest: ServerRequest) = ok().html().render("owners/add")
 
@@ -81,8 +83,18 @@ class OwnersHandler(val ownersRepository: OwnersRepository,
                 .flatMap { ownersRepository.save(it) }
                 .flatMap { ok().render("owners/edit", it) }
 
-    fun indexPage() = ok().html().render("owners/index",
+    fun indexPageWithQuery(query:String) = ok().html().render("owners/index",
+                mapOf("owners" to findByNameLike(query)
+                        .map { Pair(it, emptySet<Pet>()) },
+                        "pets" to petRepository.findAll().collectMultimap { it.owner }))
+
+    fun indexPage(): Mono<ServerResponse> = ok().html().render("owners/index",
             mapOf("owners" to ownersRepository.findAll().map { Pair(it, emptySet<Pet>()) },
                     "pets" to petRepository.findAll().collectMultimap { it.owner }))
+
+    fun findByNameLike(query:String) = mongoTemplate.find(
+            Query(Criteria().orOperator(
+                    where("firstName").regex(query, "i"),
+                    where("lastName").regex(query, "i"))), Owner::class.java)
 
 }

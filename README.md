@@ -30,8 +30,6 @@ java -jar build/libs/......-1.0.0-SNAPSHOT.jar
 
 ## TODO
 
- - Validation
- - Error handling (what happens when an entitiy is not present in the db)
- - Search query in Owners page
- - More testing
+ - Validation on save/edit
+ - Error handling (what happens when an entity is not present in the db)
 
