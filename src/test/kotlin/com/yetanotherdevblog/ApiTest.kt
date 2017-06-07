@@ -12,8 +12,10 @@ import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.test
+import reactor.core.publisher.toMono
 import java.time.Duration
 
 @RunWith(SpringRunner::class)
@@ -34,16 +36,6 @@ class ApiTest {
     }
 
     @Test
-    fun `API call for Pets`() {
-        val petsCount = petRepository.count().block(Duration.ofSeconds(2))
-        client.get().uri("/api/pets").accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .test()
-                .expectNextCount(petsCount)
-                .verifyComplete()
-    }
-
-    @Test
     fun `API call for Owners`() {
         client.get().uri("/api/owners").accept(MediaType.APPLICATION_JSON)
                 .retrieve()
@@ -60,7 +52,7 @@ class ApiTest {
                 .test()
                 .consumeNextWith {
                     assertEquals("James", it.firstName)
-                    assertEquals("Carter", it.lastName)
+                    assertEquals("Owner", it.lastName)
                 }
                 .verifyComplete()
     }
