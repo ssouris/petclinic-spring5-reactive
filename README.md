@@ -2,7 +2,8 @@
 [![Build Status](https://travis-ci.org/ssouris/petclinic-spring5-reactive.svg)](https://travis-ci.org/ssouris/petclinic-spring5-reactive)
 
 ### Description
-This is a rewrite of PetClinic using Kotlin, Spring 5 and its reactive APIs (Flux, Mono).
+PetClinic application using Kotlin, Spring 5 with the reactive APIs (Reactor).
+You can find the related blog [here](https://ssouris.github.io/2017/06/02/petclinic-spring-5-kotlin-reactive-mongodb.html).
 
 ### Technologies used
 
